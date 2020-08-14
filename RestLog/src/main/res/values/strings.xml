@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">RestLog</string>
+    <string name="storage_permission">Storage permission are required in order to save a log in the external storage</string>
+</resources>

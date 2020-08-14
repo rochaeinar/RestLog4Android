@@ -1,0 +1,38 @@
+{
+  "enabled": true,
+  "avoidDuplicated": false,
+  "maxFileSizeMb": 3,
+  "maxRecordNumber": 100,
+  "level": "verbose",
+  "deleteAfter": 1,
+  "appenders": [
+    {
+      "type": "rest",
+      "host": "http://192.168.0.10:3000"
+    },
+    {
+      "type": "console"
+    },
+    {
+      "type": "logcat"
+    },
+    {
+      "type": "database",
+      "nameFormat": "yyyy-MM-dd",
+      "path": "logs"
+    },
+    {
+      "type": "file",
+      "nameFormat": "yyyy-MM-dd",
+      "format": "txt",
+      "path": "logs"
+    }
+  ],
+  "filters": [
+    {
+      "field": "message",
+      "value": "h",
+      "filterOperator": "contains"
+    }
+  ]
+}
