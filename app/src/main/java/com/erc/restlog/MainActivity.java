@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     private void writeLogs() {
         LogConfiguration.getInstance(getApplicationContext()).setEnabled(true);
-//        LogConfiguration.getInstance(getApplicationContext()).setAvoidDuplicated(false);
-//        LogConfiguration.getInstance(getApplicationContext()).setMaxRecordNumber(100);
         Log.w("RestLog", "{0} {1}", "Hello", "World");
     }
 
