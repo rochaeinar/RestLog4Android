@@ -11,6 +11,10 @@ public class AvailableAppenders {
     public void append(LOG log) {
         ArrayList<BaseAppender> appenders = LogConfiguration.getInstance(AppContext.getContext()).getAppenders();
 
+        if(appenders.size() == 0){
+            appenders.add(new LogcatAppender());
+        }
+
         for (Appender appender : appenders) {
             appender.append(log);
         }

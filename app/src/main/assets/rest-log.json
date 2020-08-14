@@ -26,6 +26,18 @@
       "nameFormat": "yyyy-MM-dd",
       "format": "txt",
       "path": "logs"
+    },
+    {
+      "type": "file",
+      "nameFormat": "yyyy-MM-dd",
+      "format": "xml",
+      "path": "logs"
+    },
+    {
+      "type": "file",
+      "nameFormat": "yyyy-MM-dd",
+      "format": "json",
+      "path": "logs"
     }
   ],
   "filters": [
