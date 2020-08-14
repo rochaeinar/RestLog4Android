@@ -1,4 +1,5 @@
 # Rest Log4 Android
+![Overview](https://github.com/rochaeinar/RestLog4Android/blob/master/ContextOverview.png)
 
 * Add the JitPack repository to your "build.gradle" (project file) at the end of repositories:
 
