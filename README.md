@@ -16,7 +16,7 @@
 * Add the dependency in "build.gradle" (module file)
 
 		dependencies {
-		        implementation 'com.github.rochaeinar:RestLog4Android:1.0.1'
+		        implementation 'com.github.rochaeinar:RestLog4Android:1.0.2'
 		}
     
     
