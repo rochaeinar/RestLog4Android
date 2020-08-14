@@ -40,7 +40,10 @@ public class LogConfiguration {
     }
 
     private LogConfiguration() {
-
+        enabled = true;
+        level = Level.VERBOSE;
+        filters = new ArrayList<>();
+        appenders = new ArrayList<>();
     }
 
     public boolean isEnabled() {
