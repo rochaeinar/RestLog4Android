@@ -5,6 +5,7 @@ import com.erc.log.configuration.FilterValidator;
 import com.erc.log.configuration.Level;
 import com.erc.log.configuration.LogConfiguration;
 import com.erc.log.containers.LOG;
+import com.erc.log.helpers.FileHelper;
 import com.erc.log.helpers.StringUtil;
 import com.erc.log.model.LogModel;
 import com.erc.log.services.CleaningJobIntentService;
@@ -31,6 +32,26 @@ public class Log {
         addLog(Level.VERBOSE, message, tag);
     }
 
+    public static void e(String message) {
+        addLog(Level.ERROR, message);
+    }
+
+    public static void w(String message) {
+        addLog(Level.WARN, message);
+    }
+
+    public static void i(String message) {
+        addLog(Level.INFO, message);
+    }
+
+    public static void d(String message) {
+        addLog(Level.DEBUG, message);
+    }
+
+    public static void v(String message) {
+        addLog(Level.VERBOSE, message);
+    }
+
     public static void e(String tag, String message, String... parameters) {
         addLog(Level.ERROR, StringUtil.format(message, parameters), tag);
     }
@@ -51,9 +72,10 @@ public class Log {
         addLog(Level.VERBOSE, StringUtil.format(message, parameters), tag);
     }
 
-    private static void addLog(Level level, String message, String tag) {
+    private static void addLog(Level level, String message, String... tag) {
+        String tag_ = tag.length > 0 ? tag[0] : getTag();
         AvailableAppenders availableAppenders = new AvailableAppenders();
-        LOG log = new LOG(level, tag, message);
+        LOG log = new LOG(level, tag_, message);
         if (LogConfiguration.getInstance(AppContext.getContext()).isEnabled()
                 && isValidLevel(level)
                 && isValidNumberOfRecordsByDay()
@@ -72,6 +94,15 @@ public class Log {
             }
         }
         CleaningJobIntentService.clean(AppContext.getContext());
+    }
+
+    private static String getTag() {
+        String tagFromConfiguration = LogConfiguration.getInstance(AppContext.getContext()).getTag();
+        if (StringUtil.isNullOrEmpty(tagFromConfiguration)) {
+            return FileHelper.getExtension(AppContext.getContext().getPackageName());
+        } else {
+            return tagFromConfiguration;
+        }
     }
 
     private static boolean isValidNumberOfRecordsByDay() {

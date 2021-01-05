@@ -133,4 +133,16 @@ public class FileHelper {
         File file = new File(fullPath);
         return file.exists();
     }
+
+    public static String removeExtension(String text) {
+        if (text.indexOf(".") > 0)
+            text = text.substring(0, text.lastIndexOf("."));
+        return text;
+    }
+
+    public static String getExtension(String text) {
+        if (text.indexOf(".") > 0)
+            text = text.substring(text.lastIndexOf(".") + 1, text.length());
+        return text;
+    }
 }

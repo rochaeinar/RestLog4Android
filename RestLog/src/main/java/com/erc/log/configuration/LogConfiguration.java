@@ -20,6 +20,7 @@ public class LogConfiguration {
     private long maxRecordNumber;
     private Level level;
     private int deleteAfter;
+    private String tag;
 
     private ArrayList<BaseAppender> appenders;
     private ArrayList<Filter> filters;
@@ -97,6 +98,15 @@ public class LogConfiguration {
     public void setDeleteAfter(int deleteAfter) {
         this.deleteAfter = deleteAfter;
     }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
 
     public ArrayList<BaseAppender> getAppenders() {
         return appenders;
