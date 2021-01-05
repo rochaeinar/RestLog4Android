@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.erc.log.Log;
-import com.erc.log.configuration.LogConfiguration;
 import com.erc.log.helpers.Permissions;
 
 import java.util.List;
