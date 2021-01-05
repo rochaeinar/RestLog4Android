@@ -113,8 +113,8 @@ public class LOG extends Entity {
 
     public LOG(Level level, String tag, String message) {
         this.level = level.value();
-        this.tag = tag;
-        this.message = message;
+        this.tag = sanitize(tag);
+        this.message = sanitize(message);
         this.date = System.currentTimeMillis();
         this.deviceId = AndroidId.getUniquePseudoID(AppContext.getContext());
         this.count = 1;
@@ -145,6 +145,10 @@ public class LOG extends Entity {
         this.resolution = Display.getScreenResolution(AppContext.getContext());
         this.orientation = Display.getOrientation(AppContext.getContext());
 
+    }
+
+    private String sanitize(String message) {
+        return message.replace("'", "''").replaceAll("\\\\", "\\\\\\\\");
     }
 
     public long getId() {
@@ -184,7 +188,7 @@ public class LOG extends Entity {
     }
 
     public void setTag(String tag) {
-        this.tag = tag;
+        this.tag = sanitize(tag);
     }
 
     public String getMessage() {
@@ -192,7 +196,7 @@ public class LOG extends Entity {
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        this.message = sanitize(message);
     }
 
     public int getCount() {
