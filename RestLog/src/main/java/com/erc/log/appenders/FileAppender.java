@@ -3,6 +3,7 @@ package com.erc.log.appenders;
 import android.os.Environment;
 
 import com.erc.log.AppContext;
+import com.erc.log.configuration.LogConfiguration;
 import com.erc.log.containers.LOG;
 import com.erc.log.helpers.DateHelper;
 import com.erc.log.helpers.FileHelper;
@@ -35,34 +36,36 @@ public class FileAppender extends BaseAppender {
             String fileName = getFileName();
             boolean existFile = FileHelper.exist(fileName);
             if (!existFile) {
-                FilesModel.addFile(getFileName());
+                FilesModel.addFile(fileName);
             }
-            switch (FileType.valueOf(format.toUpperCase())) {
-                case TXT:
-                    TextFileHelper.write(getFileName(), log.toString(), true);
-                    break;
-                case JSON:
-                    if (existFile) {
-                        TextFileHelper.deleteLastLine(fileName);
-                    } else {
-                        TextFileHelper.write(fileName, "[\n");
-                    }
+            if (FileHelper.getSize(fileName) < LogConfiguration.getInstance(AppContext.getContext()).getMaxFileSizeMb() * 1000) {
+                switch (FileType.valueOf(format.toUpperCase())) {
+                    case TXT:
+                        TextFileHelper.write(fileName, log.toString(), true);
+                        break;
+                    case JSON:
+                        if (existFile) {
+                            TextFileHelper.deleteLastLine(fileName);
+                        } else {
+                            TextFileHelper.write(fileName, "[\n");
+                        }
 
-                    gson = new Gson();
-                    json = StringUtil.format("{0}{1}\n]", existFile ? "," : "", gson.toJson(log));
-                    TextFileHelper.write(getFileName(), json, true);
-                    break;
-                case XML:
-                    gson = new Gson();
-                    json = gson.toJson(log);
-                    try {
-                        JSONObject jsonObject = new JSONObject(json);
-                        String xml = StringUtil.format("{0}{1}{2}", "<log>", XML.toString(jsonObject), "</log>\n");
-                        TextFileHelper.write(getFileName(), xml, true);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    break;
+                        gson = new Gson();
+                        json = StringUtil.format("{0}{1}\n]", existFile ? "," : "", gson.toJson(log));
+                        TextFileHelper.write(fileName, json, true);
+                        break;
+                    case XML:
+                        gson = new Gson();
+                        json = gson.toJson(log);
+                        try {
+                            JSONObject jsonObject = new JSONObject(json);
+                            String xml = StringUtil.format("{0}{1}{2}", "<log>", XML.toString(jsonObject), "</log>\n");
+                            TextFileHelper.write(fileName, xml, true);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                }
             }
         }
     }

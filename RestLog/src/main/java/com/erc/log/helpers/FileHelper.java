@@ -1,8 +1,5 @@
 package com.erc.log.helpers;
 
-import android.content.Context;
-import android.util.Log;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -119,5 +116,10 @@ public class FileHelper {
         if (text.indexOf(".") > 0)
             text = text.substring(text.lastIndexOf(".") + 1, text.length());
         return text;
+    }
+
+    public static int getSize(String fullPath) {
+        File file = new File(fullPath);
+        return Integer.parseInt(String.valueOf(file.length() / 1024));
     }
 }
