@@ -5,7 +5,7 @@
   "maxRecordNumber": 100,
   "level": "verbose",
   "deleteAfter": 1,
-  "tag": "log",
+  "tag": "logger",
   "appenders": [
     {
       "type": "rest",

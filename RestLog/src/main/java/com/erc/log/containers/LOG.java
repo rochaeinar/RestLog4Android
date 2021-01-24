@@ -4,6 +4,7 @@ import android.os.Build;
 
 import com.erc.dal.Entity;
 import com.erc.dal.Field;
+import com.erc.dal.HelperDate;
 import com.erc.dal.PrimaryKey;
 import com.erc.dal.Table;
 import com.erc.log.AppContext;
@@ -11,11 +12,14 @@ import com.erc.log.configuration.Level;
 import com.erc.log.helpers.AndroidId;
 import com.erc.log.helpers.ApplicationInformation;
 import com.erc.log.helpers.Battery;
+import com.erc.log.helpers.DateHelper;
 import com.erc.log.helpers.Display;
 import com.erc.log.helpers.Location;
 import com.erc.log.helpers.MemoryInformation;
 import com.erc.log.helpers.Network;
 import com.erc.log.helpers.Root;
+
+import java.util.Date;
 
 @Table
 public class LOG extends Entity {
@@ -386,11 +390,11 @@ public class LOG extends Entity {
     @Override
     public String toString() {
         return "id=" + id +
-                ", date=" + date +
-                ", deviceId='" + deviceId + '\'' +
-                ", level=" + level +
+                ", date=" + HelperDate.getDateWithFormat(new Date(date), DateHelper.FORMAT) +
+                ", level=" + Level.fromValue(level).toString() +
                 ", tag='" + tag + '\'' +
                 ", message='" + message + '\'' +
+                ", deviceId='" + deviceId + '\'' +
                 ", count=" + count +
                 ", packageName='" + packageName + '\'' +
                 ", appName='" + appName + '\'' +

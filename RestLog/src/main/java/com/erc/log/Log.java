@@ -95,23 +95,23 @@ public class Log {
         addLog(Level.VERBOSE, handleException(message, exception));
     }
 
-    public static void e(String tag, String message, String... parameters) {
+    public static void e(String tag, String message, Object... parameters) {
         addLog(Level.ERROR, StringUtil.format(message, parameters), tag);
     }
 
-    public static void w(String tag, String message, String... parameters) {
+    public static void w(String tag, String message, Object... parameters) {
         addLog(Level.WARN, StringUtil.format(message, parameters), tag);
     }
 
-    public static void i(String tag, String message, String... parameters) {
+    public static void i(String tag, String message, Object... parameters) {
         addLog(Level.INFO, StringUtil.format(message, parameters), tag);
     }
 
-    public static void d(String tag, String message, String... parameters) {
+    public static void d(String tag, String message, Object... parameters) {
         addLog(Level.DEBUG, StringUtil.format(message, parameters), tag);
     }
 
-    public static void v(String tag, String message, String... parameters) {
+    public static void v(String tag, String message, Object... parameters) {
         addLog(Level.VERBOSE, StringUtil.format(message, parameters), tag);
     }
 

@@ -3,7 +3,7 @@ package com.erc.log.appenders;
 import android.os.Environment;
 
 import com.erc.dal.DB;
-import com.erc.dal.DBConfig;
+import com.erc.dal.upgrade.DBConfig;
 import com.erc.log.AppContext;
 import com.erc.log.R;
 import com.erc.log.containers.LOG;
@@ -26,10 +26,10 @@ public class DataBaseAppender extends BaseAppender {
     @Override
     public void append(LOG log) {
         if (!FileHelper.exist(getFullPath())) {
-            FileHelper.copyRawFileToSdCard(R.raw.restlog, getFullPath(), AppContext.getContext());
             FilesModel.addFile(getFullPath());
         }
-        DBConfig dbConfig = new DBConfig(AppContext.getContext(), getName(), 1, getPath(), 1);
+        DBConfig dbConfig = new DBConfig(AppContext.getContext(), getName(), 1, getPath());
+        dbConfig.setPackageFilter("com.erc.log");
         DB db = new DB(dbConfig);
         db.save(log);
     }
