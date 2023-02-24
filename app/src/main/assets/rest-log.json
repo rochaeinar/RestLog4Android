@@ -20,25 +20,25 @@
     {
       "type": "database",
       "nameFormat": "yyyy-MM-dd",
-      "path": "logs"
+      "path": "logs/rest-log"
     },
     {
       "type": "file",
       "nameFormat": "yyyy-MM-dd",
       "format": "txt",
-      "path": "logs"
+      "path": "logs/rest-log"
     },
     {
       "type": "file",
       "nameFormat": "yyyy-MM-dd",
       "format": "xml",
-      "path": "logs"
+      "path": "logs/rest-log"
     },
     {
       "type": "file",
       "nameFormat": "yyyy-MM-dd",
       "format": "json",
-      "path": "logs"
+      "path": "logs/rest-log"
     }
   ],
   "filters": [

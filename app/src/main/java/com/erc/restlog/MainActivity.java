@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.erc.log.Log;
-import com.erc.log.helpers.Permissions;
 
 import java.util.List;
 
@@ -18,11 +17,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (!Permissions.hasStoragePermission(getApplicationContext())) {
-            Permissions.requestStoragePermission(this);
-        } else {
-            writeLogs();
-        }
+
+        writeLogs();
+
     }
 
     private void writeLogs() {

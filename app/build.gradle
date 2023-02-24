@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
     defaultConfig {
         applicationId "com.erc.log"
-        minSdkVersion 14
-        targetSdkVersion 32
+        minSdkVersion 19
+        targetSdkVersion 33
         versionCode 2
         versionName "1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -17,16 +17,27 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    signingConfigs {
+        debug {
+            storeFile file('d:/Documents/Solid Mobile App/Keys/solid.release.jks')
+            keyAlias 'Solid Mobile Apps'
+            keyPassword 'kFahuT6*DL'
+            storePassword 'kFahuT6*DL'
+        }
+        release {
+            storeFile file('d:/Documents/Solid Mobile App/Keys/solid.release.jks')
+        }
+    }
     namespace 'com.erc.restlog'
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation 'pub.devrel:easypermissions:3.0.0'
     implementation project(':RestLog')
 }
