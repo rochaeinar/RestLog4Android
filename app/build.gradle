@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 
+// Load keystore
+def keystorePropertiesFile = rootProject.file("keystore.properties");
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     compileSdkVersion 33
     defaultConfig {
@@ -19,13 +24,13 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('d:/Documents/Solid Mobile App/Keys/solid.release.jks')
-            keyAlias 'Solid Mobile Apps'
-            keyPassword 'kFahuT6*DL'
-            storePassword 'kFahuT6*DL'
+            storeFile file(keystoreProperties['storeFile'])
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['storePassword']
+            storePassword keystoreProperties['keyPassword']
         }
         release {
-            storeFile file('d:/Documents/Solid Mobile App/Keys/solid.release.jks')
+            storeFile file(keystoreProperties['storeFile'])
         }
     }
     namespace 'com.erc.restlog'
