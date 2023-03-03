@@ -1,7 +1,8 @@
 package com.erc.log.helpers;
+import android.util.Log;
 
-import com.erc.dal.Log;
 import com.erc.dal.Util;
+import com.erc.log.Constants;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,7 +25,7 @@ public class DateHelper {
                 Date result1 = df1.parse(dateInFormat);
                 return result1;
             } catch (Exception e) {
-                Log.e("Error on getDateFromFormat", e);
+                Log.e(Constants.TAG, "Error on getDateFromFormat", e);
             }
         }
         return null;
@@ -39,7 +40,7 @@ public class DateHelper {
             DateFormat dateFormat = new SimpleDateFormat(format);
             return dateFormat.format(date);
         } catch (Exception e) {
-            Log.e("Error on getDateWithFormat", e);
+            Log.e(Constants.TAG,"Error on getDateWithFormat", e);
         }
         return null;
     }

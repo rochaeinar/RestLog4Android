@@ -7,6 +7,8 @@ import android.content.pm.ProviderInfo;
 import android.database.Cursor;
 import android.net.Uri;
 
+import com.erc.log.helpers.AlarmHelper;
+
 public class RestLogInitProvider extends ContentProvider {
 
     @Override
@@ -26,6 +28,7 @@ public class RestLogInitProvider extends ContentProvider {
         }
 
         AppContext.setContext(context);
+        AlarmHelper.setAlarm(context);
         super.attachInfo(context, providerInfo);
     }
 

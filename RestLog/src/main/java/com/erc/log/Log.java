@@ -8,7 +8,6 @@ import com.erc.log.containers.LOG;
 import com.erc.log.helpers.FileHelper;
 import com.erc.log.helpers.StringUtil;
 import com.erc.log.model.LogModel;
-import com.erc.log.services.CleaningJobIntentService;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -136,7 +135,6 @@ public class Log {
                 availableAppenders.append(log);
             }
         }
-        CleaningJobIntentService.clean(AppContext.getContext());
     }
 
     private static String getTag() {

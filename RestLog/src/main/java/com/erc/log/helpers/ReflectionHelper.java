@@ -1,6 +1,8 @@
 package com.erc.log.helpers;
 
-import com.erc.dal.Log;
+import android.util.Log;
+
+import com.erc.log.Constants;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -32,7 +34,7 @@ public class ReflectionHelper {
                 }
             }
         } catch (Exception e) {
-            Log.e("Error: getFields", e);
+            Log.e(Constants.TAG,"Error: getFields", e);
         }
         return fields;
     }
@@ -44,7 +46,7 @@ public class ReflectionHelper {
             Constructor<?> ctor = clazz.getConstructor(paramsConstructorTypes);
             object = ctor.newInstance(paramsConstructor);
         } catch (Exception e) {
-            Log.e("Please make sure that exist a Default constructor without parameters...", e);
+            Log.e(Constants.TAG,"Please make sure that exist a Default constructor without parameters...", e);
         }
         return object;
     }

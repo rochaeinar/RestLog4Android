@@ -3,6 +3,7 @@ package com.erc.log.http;
 
 import android.util.Log;
 
+import com.erc.log.Constants;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -34,7 +35,7 @@ public class HttpRequest {
             Request request = getRequest(methodRequest, route, body_);
             response = client.newCall(request).execute();
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(Constants.TAG, "getResponse", e);
         }
         return response;
     }
@@ -65,13 +66,13 @@ public class HttpRequest {
         try {
             if (response.code() == StatusCode.OK.value() || response.code() == StatusCode.CREATED.value()) {
                 String responseString = response.body().string();
-                Log.i(TAG, responseString);
+                Log.i(Constants.TAG, responseString);
                 jsonObject = new JSONObject(responseString);
             } else {
-                Log.w(TAG, response.request().method() + ": REQUEST: " + response.request());
+                Log.w(Constants.TAG, response.request().method() + ": REQUEST: " + response.request());
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(Constants.TAG, "handleResponse", e);
         }
         return jsonObject;
     }

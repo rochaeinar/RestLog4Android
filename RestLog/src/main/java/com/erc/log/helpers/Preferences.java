@@ -3,6 +3,8 @@ package com.erc.log.helpers;
 import android.content.Context;
 import android.util.Log;
 
+import com.erc.log.Constants;
+
 public class Preferences {
 
     public static String SETTINGS_NAME = "logger_settings";
@@ -18,7 +20,7 @@ public class Preferences {
             res = context.getSharedPreferences(SETTINGS_NAME, Context.MODE_PRIVATE).getString(name, default1);
         } catch (Exception e) {
             res = default1;
-            Log.e("SharedPreferences", "ERROR: get_" + name + "()");
+            Log.e(Constants.TAG,"SharedPreferences: ERROR: get_" + name + "()");
         }
         return res;
     }
@@ -30,7 +32,7 @@ public class Preferences {
             res = context.getSharedPreferences(SETTINGS_NAME, Context.MODE_PRIVATE).getInt(name, default1);
         } catch (Exception e) {
             res = default1;
-            Log.e("SharedPreferences", "ERROR: get_" + name + "()");
+            Log.e(Constants.TAG,"SharedPreferences: ERROR: get_" + name + "()");
         }
         return res;
     }
@@ -42,7 +44,7 @@ public class Preferences {
             res = context.getSharedPreferences(SETTINGS_NAME, Context.MODE_PRIVATE).getBoolean(name, default1);
         } catch (Exception e) {
             res = default1;
-            Log.e("SharedPreferences", "ERROR: get_" + name + "()");
+            Log.e(Constants.TAG,"SharedPreferences: ERROR: get_" + name + "()");
         }
         return res;
     }
@@ -51,7 +53,7 @@ public class Preferences {
         try {
             context.getSharedPreferences(SETTINGS_NAME, Context.MODE_PRIVATE).edit().putString(name, value).apply();
         } catch (Exception e) {
-            Log.e("SharedPreferences", "ERROR: set_" + name + "()");
+            Log.e(Constants.TAG,"SharedPreferences: ERROR: set_" + name + "()");
         }
     }
 
@@ -59,7 +61,7 @@ public class Preferences {
         try {
             context.getSharedPreferences(SETTINGS_NAME, Context.MODE_PRIVATE).edit().putInt(name, value).apply();
         } catch (Exception e) {
-            Log.e("SharedPreferences", "ERROR: set_" + name + "()");
+            Log.e(Constants.TAG,"SharedPreferences: ERROR: set_" + name + "()");
         }
     }
 
@@ -67,7 +69,7 @@ public class Preferences {
         try {
             context.getSharedPreferences(SETTINGS_NAME, Context.MODE_PRIVATE).edit().putBoolean(name, value).apply();
         } catch (Exception e) {
-            Log.e("SharedPreferences", "ERROR: set_" + name + "()");
+            Log.e(Constants.TAG,"SharedPreferences: ERROR: set_" + name + "()");
         }
     }
 }

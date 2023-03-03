@@ -2,6 +2,8 @@ package com.erc.log.helpers;
 
 import android.util.Log;
 
+import com.erc.log.Constants;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,18 +25,18 @@ public class TextFileHelper {
             out.write(text);
 
         } catch (IOException e) {
-            Log.e("TextFileHelper.write()", e.toString());
+            Log.e(Constants.TAG,"TextFileHelper.write()", e);
         }
         try {
             if (out != null) {
                 out.close();
             }
         } catch (Exception e) {
-            Log.e("TextFileHelper.close", e.toString());
+            Log.e(Constants.TAG,"TextFileHelper.close", e);
         }
     }
 
-    private static void createParentFolder(String fullPath) {
+    public static void createParentFolder(String fullPath) {
         File file = new File(fullPath);
         String parentFolder = file.getParent();
         if (parentFolder != null) {
@@ -65,7 +67,7 @@ public class TextFileHelper {
                     }
                 }
             else
-                Log.w("File not exist", fullPath);
+                Log.w(Constants.TAG, "File not exist: " + fullPath);
 
             buffer.close();
 

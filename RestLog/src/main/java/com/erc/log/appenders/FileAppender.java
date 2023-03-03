@@ -1,7 +1,5 @@
 package com.erc.log.appenders;
 
-import android.os.Environment;
-
 import com.erc.log.AppContext;
 import com.erc.log.configuration.LogConfiguration;
 import com.erc.log.containers.LOG;
@@ -9,6 +7,7 @@ import com.erc.log.helpers.DateHelper;
 import com.erc.log.helpers.FileHelper;
 import com.erc.log.helpers.StringUtil;
 import com.erc.log.helpers.TextFileHelper;
+import com.erc.log.helpers.Util;
 import com.erc.log.model.FilesModel;
 import com.google.gson.Gson;
 
@@ -67,6 +66,10 @@ public class FileAppender extends BaseAppender {
         }
     }
 
+    public String getPath() {
+        return path;
+    }
+
     private String getFileName() {
         if (path.endsWith("/")) {
             path = path.substring(0, path.lastIndexOf('/'));
@@ -76,7 +79,7 @@ public class FileAppender extends BaseAppender {
         }
 
         return StringUtil.format("{0}/{1}/{2}.{3}",
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                Util.getAppPath(AppContext.getContext()) + "files",
                 path,
                 DateHelper.getDateWithFormat(new Date(), nameFormat),
                 format.toLowerCase());

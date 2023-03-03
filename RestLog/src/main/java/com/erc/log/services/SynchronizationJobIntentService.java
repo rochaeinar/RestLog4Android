@@ -6,6 +6,8 @@ import android.os.SystemClock;
 import androidx.annotation.NonNull;
 import androidx.core.app.SafeJobIntentService;
 import android.util.Log;
+
+import com.erc.log.Constants;
 import com.erc.log.DataBase;
 import com.erc.log.containers.LOG;
 import com.erc.log.helpers.Network;
@@ -27,7 +29,7 @@ public class SynchronizationJobIntentService extends SafeJobIntentService {
         SystemClock.sleep(10000);
 
         if (intent != null && Network.hasConnectivity(getApplicationContext())) {
-            Log.w("onHandleWork", "STARTING");
+            Log.w(Constants.TAG, "onHandleWork: STARTING");
 
             LogResource logResource = new LogResource();
             ArrayList<LOG> logs = DataBase.getInstance().getAll(LOG.class);
@@ -38,7 +40,7 @@ public class SynchronizationJobIntentService extends SafeJobIntentService {
                     DataBase.getInstance().remove(LOG.class, log.getId());
                 }
             }
-            Log.w("onHandleWork", "SUCCESS");
+            Log.w(Constants.TAG, "onHandleWork: SUCCESS");
         }
     }
 }

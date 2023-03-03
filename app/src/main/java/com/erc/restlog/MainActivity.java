@@ -23,7 +23,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     private void writeLogs() {
+        Log.v("RestLog", "{0} {1}", "Hello", "World");
+        Log.i("RestLog", "{0} {1}", "Hello", "World");
         Log.w("RestLog", "{0} {1}", "Hello", "World");
+        Log.e("RestLog", "{0} {1}", "Hello", "World");
     }
 
     @Override

@@ -59,6 +59,10 @@ public class FileHelper {
         return false;
     }
 
+    public static void copyFile(String fullPath, String outputPath) {
+        copyFile(getPath(fullPath), getFileName(fullPath), outputPath);
+    }
+
     public static void copyFile(String inputPath, String inputFile, String outputPath) {
 
         InputStream in = null;
@@ -72,8 +76,8 @@ public class FileHelper {
             }
 
 
-            in = new FileInputStream(inputPath + inputFile);
-            out = new FileOutputStream(outputPath + inputFile);
+            in = new FileInputStream(inputPath + "/" + inputFile);
+            out = new FileOutputStream(outputPath + "/" + inputFile);
 
             byte[] buffer = new byte[1024];
             int read;
@@ -90,6 +94,16 @@ public class FileHelper {
 
         } catch (Exception e) {
         }
+    }
+
+    public static String getFileName(String path) {
+        File file = new File(path);
+        return file.getName();
+    }
+
+    public static String getPath(String path) {
+        File file = new File(path);
+        return file.getParent();
     }
 
     public static void renameFile(String path, String oldName, String newName) {
