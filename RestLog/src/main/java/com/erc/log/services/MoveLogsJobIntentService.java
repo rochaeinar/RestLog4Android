@@ -34,30 +34,32 @@ public class MoveLogsJobIntentService extends SafeJobIntentService {
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
         Log.w(Constants.TAG, "MoveLogsJob: STARTING");
-
-        String relativePath = ((FileAppender) LogConfiguration
+        FileAppender fileAppender = ((FileAppender) LogConfiguration
                 .getInstance(AppContext.getContext())
-                .getAppender(AppenderType.FILE)).getPath();
-        ArrayList<FILE> files = FilesModel.getFilesToMove();
-        File downloadsPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                .getAppender(AppenderType.FILE));
+        if (fileAppender != null) {
+            String relativePath = fileAppender.getPath();
+            ArrayList<FILE> files = FilesModel.getFilesToMove();
+            File downloadsPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
-        for (FILE file : files) {
-            if (FileHelper.exist(file.fullPath)) {
-                FileHelper.copyFile(file.fullPath, downloadsPath.getPath() + "/" + relativePath);
-                if (FileHelper.deleteFile(file.fullPath)) {
+            for (FILE file : files) {
+                if (FileHelper.exist(file.fullPath)) {
+                    FileHelper.copyFile(file.fullPath, downloadsPath.getPath() + "/" + relativePath);
+                    if (FileHelper.deleteFile(file.fullPath)) {
+                        FilesModel.deleteFile(file.id);
+                        FileHelper.deleteFile(file.fullPath + "-journal");
+                    }
+                } else {
                     FilesModel.deleteFile(file.id);
-                    FileHelper.deleteFile(file.fullPath + "-journal");
                 }
-            } else {
-                FilesModel.deleteFile(file.id);
             }
-        }
 
-        ArrayList<LOG> logs = LogModel.getLogsToDelete();
+            ArrayList<LOG> logs = LogModel.getLogsToDelete();
 
-        for (LOG log : logs) {
-            LogModel.delete(log.id);
+            for (LOG log : logs) {
+                LogModel.delete(log.id);
+            }
+            Log.w(Constants.TAG, "MoveLogsJob: files " + files.size());
         }
-        Log.w(Constants.TAG, "MoveLogsJob: files " + files.size());
     }
 }
