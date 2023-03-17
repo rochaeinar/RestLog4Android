@@ -23,15 +23,22 @@ public class FilesModel {
         DataBase.getInstance().remove(FILE.class, id);
     }
 
-    public static ArrayList<FILE> getFilesToMove() {
+    private static ArrayList<FILE> getFiles(ExpresionOperator expresionOperator) {
         Calendar calendar = DateHelper.getEmptyTodaysCalendar();
         calendar.add(Calendar.HOUR, 0);
         calendar.add(Calendar.MINUTE, 0);
         calendar.add(Calendar.SECOND, 0);
         calendar.add(Calendar.MILLISECOND, 0);
         Options options = new Options();
-        options.and("date", calendar.getTimeInMillis(), ExpresionOperator.LESS_THAN);
+        options.and("date", calendar.getTimeInMillis(), expresionOperator);
         return DataBase.getInstance().getAll(FILE.class, options);
     }
 
+    public static ArrayList<FILE> getFilesToMove() {
+        return getFiles(ExpresionOperator.LESS_THAN);
+    }
+
+    public static ArrayList<FILE> getFilesToCopy() {
+        return getFiles(ExpresionOperator.GREATER_THAN_OR_EQUAL_TO);
+    }
 }

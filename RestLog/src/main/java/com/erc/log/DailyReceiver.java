@@ -14,6 +14,6 @@ public class DailyReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.w(Constants.TAG, "DailyReceiver");
         AlarmHelper.setAlarm(context);
-        MoveLogsJobIntentService.move(AppContext.getContext());
+        MoveLogsJobIntentService.moveFilesFromYesterday(AppContext.getContext());
     }
 }

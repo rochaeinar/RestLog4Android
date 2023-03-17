@@ -1,5 +1,7 @@
 package com.erc.log.helpers;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -39,6 +41,7 @@ public class FileHelper {
             // delete the original file
             new File(inputPath + inputFile).delete();
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -47,6 +50,7 @@ public class FileHelper {
         try {
             return new File(fullPath).delete();
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
@@ -55,19 +59,26 @@ public class FileHelper {
         try {
             return new File(inputPath + inputFile).delete();
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
 
-    public static void copyFile(String fullPath, String outputPath) {
-        copyFile(getPath(fullPath), getFileName(fullPath), outputPath);
+    public static void copyFileChangingName(String fullPath, String outputPath, String newName) {
+        copyFile(getPath(fullPath), outputPath, getFileName(fullPath), newName);
     }
 
-    public static void copyFile(String inputPath, String inputFile, String outputPath) {
+    public static void copyFile(String fullPath, String outputPath) {
+        copyFile(getPath(fullPath), outputPath, getFileName(fullPath));
+    }
+
+    public static void copyFile(String inputPath, String outputPath, String inputFile, String... outputFile) {
 
         InputStream in = null;
         OutputStream out = null;
         try {
+
+            String outputFile_ = outputFile.length > 0 ? outputFile[0] : inputFile;
 
             //create output directory if it doesn't exist
             File dir = new File(outputPath);
@@ -77,7 +88,7 @@ public class FileHelper {
 
 
             in = new FileInputStream(inputPath + "/" + inputFile);
-            out = new FileOutputStream(outputPath + "/" + inputFile);
+            out = new FileOutputStream(outputPath + "/" + outputFile_);
 
             byte[] buffer = new byte[1024];
             int read;
@@ -93,6 +104,7 @@ public class FileHelper {
             out = null;
 
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -112,6 +124,7 @@ public class FileHelper {
             File to = new File(path, newName);
             from.renameTo(to);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

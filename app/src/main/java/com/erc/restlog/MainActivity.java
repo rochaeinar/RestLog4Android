@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.erc.log.Log;
+import com.erc.log.services.MoveLogsJobIntentService;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         Log.i("RestLog", "{0} {1}", "Hello", "World");
         Log.w("RestLog", "{0} {1}", "Hello", "World");
         Log.e("RestLog", "{0} {1}", "Hello", "World");
+        MoveLogsJobIntentService.copyTodaysFiles(getApplicationContext());
     }
 
     @Override
