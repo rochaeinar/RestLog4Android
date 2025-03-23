@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 34
-        versionCode 19
-        versionName "1.0.19"
+        versionCode 20
+        versionName "1.0.20"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -28,7 +28,7 @@ dependencies {
 
     implementation 'com.squareup.okhttp:okhttp:2.4.0'
     implementation 'com.google.code.gson:gson:2.8.9'
-    implementation 'com.github.rochaeinar:data-access:1.0.36'
+    implementation 'com.github.rochaeinar:data-access:1.0.38'
     //compileOnly files('libs/dal-release.aar')
     implementation 'pub.devrel:easypermissions:3.0.0'
     implementation files('libs/java-json.jar')
