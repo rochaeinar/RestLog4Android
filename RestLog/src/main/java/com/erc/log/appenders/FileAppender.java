@@ -11,9 +11,7 @@ import com.erc.log.helpers.Util;
 import com.erc.log.model.FilesModel;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.XML;
 
 import java.util.Date;
 
@@ -52,18 +50,43 @@ public class FileAppender extends BaseAppender {
                     TextFileHelper.write(fileName, json, true);
                     break;
                 case XML:
-                    gson = new Gson();
-                    json = gson.toJson(log);
                     try {
+                        gson = new Gson();
+                        json = gson.toJson(log);
                         JSONObject jsonObject = new JSONObject(json);
-                        String xml = StringUtil.format("{0}{1}{2}", "<log>", XML.toString(jsonObject), "</log>\n");
+                        String xml = StringUtil.format("{0}{1}{2}", "<log>", jsonToXml(jsonObject), "</log>\n");
                         TextFileHelper.write(fileName, xml, true);
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     break;
             }
         }
+    }
+
+    private String jsonToXml(JSONObject jsonObject) {
+        StringBuilder xml = new StringBuilder();
+        try {
+            java.util.Iterator<String> keys = jsonObject.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                try {
+                    Object value = jsonObject.get(key);
+                    xml.append("<").append(key).append(">");
+                    if (value instanceof JSONObject) {
+                        xml.append(jsonToXml((JSONObject) value));
+                    } else {
+                        xml.append(value != null ? value.toString() : "");
+                    }
+                    xml.append("</").append(key).append(">");
+                } catch (Exception e) {
+                    // Skip invalid entries
+                }
+            }
+        } catch (Exception e) {
+            // Return empty if parsing fails
+        }
+        return xml.toString();
     }
 
     public String getPath() {

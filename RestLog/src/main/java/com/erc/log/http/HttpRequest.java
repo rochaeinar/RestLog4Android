@@ -4,11 +4,11 @@ package com.erc.log.http;
 import android.util.Log;
 
 import com.erc.log.Constants;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import org.json.JSONObject;
 
@@ -51,7 +51,7 @@ public class HttpRequest {
                 break;
             case POST:
                 MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-                RequestBody requestBody = RequestBody.create(JSON, body_);
+                RequestBody requestBody = RequestBody.create(body_, JSON);
                 request = new Request.Builder()
                         .url(HostConfiguration.getHost() + route)
                         .post(requestBody)
