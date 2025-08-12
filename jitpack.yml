@@ -1,0 +1,4 @@
+jdk:
+  - openjdk17
+install:
+  - ./gradlew :RestLog:publishToMavenLocal -x :app:assembleDebug -x :app:assembleRelease
