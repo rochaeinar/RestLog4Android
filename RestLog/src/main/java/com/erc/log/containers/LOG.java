@@ -1,25 +1,13 @@
 package com.erc.log.containers;
 
-import android.os.Build;
-
 import com.erc.dal.Entity;
 import com.erc.dal.Field;
-import com.erc.dal.HelperDate;
 import com.erc.dal.PrimaryKey;
 import com.erc.dal.Table;
 import com.erc.log.AppContext;
 import com.erc.log.configuration.Level;
-import com.erc.log.helpers.AndroidId;
-import com.erc.log.helpers.ApplicationInformation;
-import com.erc.log.helpers.Battery;
-import com.erc.log.helpers.DateHelper;
-import com.erc.log.helpers.Display;
-import com.erc.log.helpers.Location;
-import com.erc.log.helpers.MemoryInformation;
-import com.erc.log.helpers.Network;
-import com.erc.log.helpers.Root;
-
-import java.util.Date;
+import com.erc.log.format.LogFormatter;
+import com.erc.log.helpers.DeviceInfoCache;
 
 @Table
 public class LOG extends Entity {
@@ -120,35 +108,38 @@ public class LOG extends Entity {
         this.tag = sanitize(tag);
         this.message = sanitize(message);
         this.date = System.currentTimeMillis();
-        this.deviceId = AndroidId.getUniquePseudoID(AppContext.getContext());
         this.count = 1;
-        this.packageName = ApplicationInformation.getPackageName(AppContext.getContext());
-        try {
-            this.appName = ApplicationInformation.getApplicationName(AppContext.getContext());
-        } catch (Exception e) {
-            //needed for tests
-        }
-        this.version = ApplicationInformation.getApplicationVersion(AppContext.getContext());
-        this.manufacturer = Build.MANUFACTURER;
-        this.brand = Build.BRAND;
-        this.model = Build.MODEL;
-        this.totalMemoryRam = MemoryInformation.getTotalMemory(AppContext.getContext());
-        this.ramMemoryUsage = MemoryInformation.getMemoryUsage(AppContext.getContext());
-        this.totalInternalMemory = MemoryInformation.getTotalInternalMemorySize();
-        this.internalMemoryAvailable = MemoryInformation.getAvailableInternalMemorySize();
-        this.androidVersion = Build.VERSION.RELEASE;
-        this.rootedState = Root.isDeviceRooted() + "";
-        this.locale = Location.getCurrentLocale(AppContext.getContext()).getDisplayName();
-        this.batteryLevel = Battery.getBatteryPercentage(AppContext.getContext());
-        this.chargingState = Battery.isPlugged(AppContext.getContext());
-        this.networkType = Network.getConnectionType(AppContext.getContext()).value();
-        this.networkState = Network.connectivityString(AppContext.getContext());
-        this.activeScreen = Display.getScreenStatus(AppContext.getContext()).value();
-        this.density = Display.getDensityName(AppContext.getContext());
-        this.dpi = Display.getDpi(AppContext.getContext());
-        this.resolution = Display.getScreenResolution(AppContext.getContext());
-        this.orientation = Display.getOrientation(AppContext.getContext());
 
+        // Device/app info is not gathered here anymore: constant values are captured once
+        // per process and dynamic ones (memory, battery, network…) are read from a short
+        // TTL cache, so logging thousands of records no longer re-queries the system each
+        // time. See DeviceInfoCache.
+        DeviceInfoCache info = DeviceInfoCache.getInstance(AppContext.getContext());
+        this.deviceId = info.deviceId;
+        this.packageName = info.packageName;
+        this.appName = info.appName;
+        this.version = info.version;
+        this.manufacturer = info.manufacturer;
+        this.brand = info.brand;
+        this.model = info.model;
+        this.totalMemoryRam = info.totalMemoryRam;
+        this.totalInternalMemory = info.totalInternalMemory;
+        this.androidVersion = info.androidVersion;
+        this.rootedState = info.rootedState;
+        this.locale = info.locale;
+        this.density = info.density;
+        this.dpi = info.dpi;
+        this.resolution = info.resolution;
+
+        DeviceInfoCache.Dynamic dynamic = info.getDynamic();
+        this.ramMemoryUsage = dynamic.ramMemoryUsage;
+        this.internalMemoryAvailable = dynamic.internalMemoryAvailable;
+        this.batteryLevel = dynamic.batteryLevel;
+        this.chargingState = dynamic.chargingState;
+        this.networkType = dynamic.networkType;
+        this.networkState = dynamic.networkState;
+        this.activeScreen = dynamic.activeScreen;
+        this.orientation = dynamic.orientation;
     }
 
     private String sanitize(String message) {
@@ -387,36 +378,13 @@ public class LOG extends Entity {
         this.orientation = orientation;
     }
 
+    /**
+     * Compact, readable one-liner with only the per-log (variable) information. The
+     * constant device/app context is no longer repeated here; text appenders write it
+     * once as a header via {@link LogFormatter#header(LOG)}.
+     */
     @Override
     public String toString() {
-        return "id=" + id +
-                ", date=" + HelperDate.getDateWithFormat(new Date(date), DateHelper.FORMAT) +
-                ", level=" + Level.fromValue(level).toString() +
-                ", tag='" + tag + '\'' +
-                ", message='" + message + '\'' +
-                ", deviceId='" + deviceId + '\'' +
-                ", count=" + count +
-                ", packageName='" + packageName + '\'' +
-                ", appName='" + appName + '\'' +
-                ", version='" + version + '\'' +
-                ", manufacturer='" + manufacturer + '\'' +
-                ", brand='" + brand + '\'' +
-                ", model='" + model + '\'' +
-                ", totalMemoryRam='" + totalMemoryRam + '\'' +
-                ", ramMemoryUsage='" + ramMemoryUsage + '\'' +
-                ", totalInternalMemory='" + totalInternalMemory + '\'' +
-                ", internalMemoryAvailable='" + internalMemoryAvailable + '\'' +
-                ", androidVersion='" + androidVersion + '\'' +
-                ", rootedState='" + rootedState + '\'' +
-                ", locale='" + locale + '\'' +
-                ", batteryLevel='" + batteryLevel + '\'' +
-                ", chargingState='" + chargingState + '\'' +
-                ", networkType='" + networkType + '\'' +
-                ", networkState='" + networkState + '\'' +
-                ", activeScreen='" + activeScreen + '\'' +
-                ", density='" + density + '\'' +
-                ", dpi='" + dpi + '\'' +
-                ", resolution='" + resolution + '\'' +
-                ", orientation='" + orientation + '\'' + "\n";
+        return LogFormatter.compactLine(this);
     }
 }

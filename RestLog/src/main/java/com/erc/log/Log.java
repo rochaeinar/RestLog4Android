@@ -1,13 +1,12 @@
 package com.erc.log;
 
-import com.erc.log.appenders.AvailableAppenders;
+import com.erc.log.async.AsyncLogDispatcher;
 import com.erc.log.configuration.FilterValidator;
 import com.erc.log.configuration.Level;
 import com.erc.log.configuration.LogConfiguration;
 import com.erc.log.containers.LOG;
 import com.erc.log.helpers.FileHelper;
 import com.erc.log.helpers.StringUtil;
-import com.erc.log.model.LogModel;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -115,26 +114,26 @@ public class Log {
     }
 
     private static void addLog(Level level, String message, String... tag) {
-        String tag_ = tag.length > 0 ? tag[0] : getTag();
-        AvailableAppenders availableAppenders = new AvailableAppenders();
-        LOG log = new LOG(level, tag_, message);
-        if (LogConfiguration.getInstance(AppContext.getContext()).isEnabled()
-                && isValidLevel(level)
-                && isValidNumberOfRecordsByDay()
-                && FilterValidator.isValidFilter(log)) {
+        LogConfiguration configuration = LogConfiguration.getInstance(AppContext.getContext());
 
-            if (LogConfiguration.getInstance(AppContext.getContext()).isAvoidDuplicated()) {
-                LOG existentLog = LogModel.getLog(log);
-                if (existentLog != null) {
-                    existentLog.count++;
-                    availableAppenders.append(existentLog);
-                } else {
-                    availableAppenders.append(log);
-                }
-            } else {
-                availableAppenders.append(log);
-            }
+        // Cheap, in-memory checks run on the caller thread so we never build/queue logs
+        // that would be discarded anyway.
+        if (!configuration.isEnabled() || !isValidLevel(level)) {
+            return;
         }
+
+        String tag_ = tag.length > 0 ? tag[0] : getTag();
+        LOG log = new LOG(level, tag_, message);
+
+        if (!FilterValidator.isValidFilter(log)) {
+            return;
+        }
+
+        // Everything that touches the database (daily-record cap, de-duplication and the
+        // actual write) happens off the caller/UI thread inside the dispatcher. Under
+        // extreme load the dispatcher drops the oldest pending logs instead of blocking,
+        // so the host app can never be stalled or killed by a logging storm.
+        AsyncLogDispatcher.getInstance().enqueue(log);
     }
 
     private static String getTag() {
@@ -144,12 +143,6 @@ public class Log {
         } else {
             return tagFromConfiguration;
         }
-    }
-
-    private static boolean isValidNumberOfRecordsByDay() {
-        long maxRecordNumber = LogConfiguration.getInstance(AppContext.getContext()).getMaxRecordNumber();
-        long currentRecords = LogModel.getDailyRecordsCount();
-        return maxRecordNumber == 0 || (currentRecords < maxRecordNumber);
     }
 
     private static boolean isValidLevel(Level level) {

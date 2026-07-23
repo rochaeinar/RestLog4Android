@@ -41,7 +41,8 @@ dependencies {
     
     // Permissions & Data Access
     implementation 'pub.devrel:easypermissions:3.0.0'
-    implementation 'com.github.rochaeinar:data-access:1.0.40'
+    // Used directly as a source module (see settings.gradle), no JitPack .aar.
+    implementation project(':dal')
 }
 
 afterEvaluate {

@@ -1,1 +1,7 @@
 include ':app', ':RestLog'
+
+// Use the data-access (DAL) module directly from source — no JitPack .aar — so changes to
+// the DAL are reflected immediately. Any project that builds RestLog from source must also
+// provide ':dal' the same way (see the tracker's settings.gradle).
+include ':dal'
+project(':dal').projectDir = new File(settingsDir, '../data-access/DataAccessLayer/dal')

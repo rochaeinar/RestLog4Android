@@ -12,11 +12,18 @@ import com.erc.log.helpers.Util;
 import com.erc.log.model.FilesModel;
 
 import java.util.Date;
+import java.util.List;
 
 public class DataBaseAppender extends BaseAppender {
 
     private String nameFormat;
     private String path;
+
+    // Cached open connection, keyed by the (date-based) database file name. These are
+    // runtime-only helpers and MUST NOT be serialized with the configuration, hence
+    // transient (the configuration is persisted with Gson).
+    private transient DB cachedDb;
+    private transient String cachedDbName;
 
     public DataBaseAppender() {
         this.type = AppenderType.DATABASE;
@@ -24,14 +31,41 @@ public class DataBaseAppender extends BaseAppender {
 
     @Override
     public void append(LOG log) {
+        getDb().save(log);
+    }
+
+    @Override
+    public void append(List<LOG> logs) {
+        if (logs == null || logs.isEmpty()) {
+            return;
+        }
+        // Persist the whole batch in a single transaction.
+        getDb().saveAll(logs);
+    }
+
+    /**
+     * Returns a reusable database connection for today's log file. Opening a new
+     * {@link DB} (which opens SQLiteOpenHelper) per append was a major cost; we now keep
+     * one instance and only recreate it when the target file name changes (e.g. at the
+     * daily rollover).
+     */
+    private DB getDb() {
+        ensureFileRegistered();
+        String name = getName();
+        if (cachedDb == null || !name.equals(cachedDbName)) {
+            DBConfig dbConfig = new DBConfig(AppContext.getContext(), name, 1, getPath());
+            dbConfig.setPackageFilter("com.erc.log");
+            cachedDb = new DB(dbConfig);
+            cachedDbName = name;
+        }
+        return cachedDb;
+    }
+
+    private void ensureFileRegistered() {
         TextFileHelper.createParentFolder(getFullPath());
         if (!FileHelper.exist(getFullPath())) {
             FilesModel.addFile(getFullPath());
         }
-        DBConfig dbConfig = new DBConfig(AppContext.getContext(), getName(), 1, getPath());
-        dbConfig.setPackageFilter("com.erc.log");
-        DB db = new DB(dbConfig);
-        db.save(log);
     }
 
     private String getFullPath() {

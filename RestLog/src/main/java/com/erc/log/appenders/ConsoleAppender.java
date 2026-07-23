@@ -1,9 +1,7 @@
 package com.erc.log.appenders;
 
 import com.erc.log.containers.LOG;
-import com.erc.log.helpers.DateHelper;
-import com.erc.log.helpers.StringUtil;
-import com.erc.log.model.LogModel;
+import com.erc.log.format.LogFormatter;
 
 public class ConsoleAppender extends BaseAppender {
 
@@ -12,10 +10,6 @@ public class ConsoleAppender extends BaseAppender {
 
     @Override
     public void append(LOG log) {
-        System.out.println(StringUtil.format("{0} {1} {2} {3}",
-                DateHelper.getDateWithFormat(log.date, DateHelper.FORMAT),
-                log.packageName,
-                log.tag,
-                log.message));
+        System.out.println(LogFormatter.compactLine(log));
     }
 }

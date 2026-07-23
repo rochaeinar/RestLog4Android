@@ -16,6 +16,7 @@ public class DateHelper {
     public static final String ISO_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     public static final String FORMAT = "yyyy-MM-dd' 'HH:mm:ss";
     public static final String FORMAT_DATE = "yyyy-MM-dd";
+    public static final String FORMAT_TIME = "HH:mm:ss";
 
     public static Date getDateFromFormat(String dateInFormat, String format) {
 

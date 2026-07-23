@@ -20,6 +20,10 @@ public class LogModel {
         DataBase.getInstance().save(log);
     }
 
+    public static void addAll(java.util.List<LOG> logs) {
+        DataBase.getInstance().saveAll(logs);
+    }
+
     public static void delete(long id) {
         DataBase.getInstance().remove(LOG.class, id);
     }
