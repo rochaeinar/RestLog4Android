@@ -41,4 +41,8 @@ public class FilesModel {
     public static ArrayList<FILE> getFilesToCopy() {
         return getFiles(ExpresionOperator.GREATER_THAN_OR_EQUAL_TO);
     }
+
+    public static ArrayList<FILE> getAllFiles() {
+        return DataBase.getInstance().getAll(FILE.class, new Options());
+    }
 }

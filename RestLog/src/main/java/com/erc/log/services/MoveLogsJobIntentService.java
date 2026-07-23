@@ -41,20 +41,72 @@ public class MoveLogsJobIntentService extends SafeJobIntentService {
         enqueueWork(context, MoveLogsJobIntentService.class, JOB_ID, intent);
     }
 
+    public static void exportAndDeleteAll(Context context) {
+        Intent intent = new Intent();
+        intent.putExtra("mode", "exportAndDeleteAll");
+        enqueueWork(context, MoveLogsJobIntentService.class, JOB_ID, intent);
+    }
+
+    public static void deleteAll(Context context) {
+        Intent intent = new Intent();
+        intent.putExtra("mode", "deleteAll");
+        enqueueWork(context, MoveLogsJobIntentService.class, JOB_ID, intent);
+    }
+
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
         Log.w(Constants.TAG, "MoveLogsJob: STARTING");
         FileAppender fileAppender = ((FileAppender) LogConfiguration
                 .getInstance(AppContext.getContext())
                 .getAppender(AppenderType.FILE));
-        if (fileAppender != null) {
-            boolean copy = intent.getBooleanExtra("copy", false);
-            if (copy) {
-                copy(fileAppender);
-            } else {
-                moveAndDeleteLogs(fileAppender);
+        if (fileAppender == null) {
+            return;
+        }
+
+        String mode = intent.getStringExtra("mode");
+        if ("exportAndDeleteAll".equals(mode)) {
+            exportAllLogs(fileAppender);
+            deleteAllLogs(fileAppender);
+        } else if ("deleteAll".equals(mode)) {
+            deleteAllLogs(fileAppender);
+        } else if (intent.getBooleanExtra("copy", false)) {
+            copy(fileAppender);
+        } else {
+            moveAndDeleteLogs(fileAppender);
+        }
+    }
+
+    private void exportAllLogs(FileAppender fileAppender) {
+        String relativePath = fileAppender.getPath();
+        ArrayList<FILE> files = FilesModel.getAllFiles();
+        File downloadsPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+        for (FILE file : files) {
+            if (FileHelper.exist(file.fullPath)) {
+                String fileName = FileHelper.removeExtension(FileHelper.getFileName(file.fullPath));
+                String extension = FileHelper.getExtension(file.fullPath);
+                String time = DateHelper.getDateWithFormat(new Date(), "_hh.mm.ss");
+                FileHelper.copyFileChangingName(file.fullPath,
+                        downloadsPath.getPath() + "/" + relativePath,
+                        fileName + time + "." + extension);
             }
         }
+        Log.w(Constants.TAG, "ExportAllLogs: files " + files.size());
+    }
+
+    private void deleteAllLogs(FileAppender fileAppender) {
+        ArrayList<FILE> files = FilesModel.getAllFiles();
+        for (FILE file : files) {
+            FileHelper.deleteFile(file.fullPath);
+            FileHelper.deleteFile(file.fullPath + "-journal");
+            FilesModel.deleteFile(file.id);
+        }
+
+        ArrayList<LOG> logs = LogModel.getLogsToDelete();
+        for (LOG log : logs) {
+            LogModel.delete(log.id);
+        }
+        Log.w(Constants.TAG, "DeleteAllLogs: files " + files.size());
     }
 
     private void moveAndDeleteLogs(FileAppender fileAppender) {
