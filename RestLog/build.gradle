@@ -2,14 +2,14 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
 android {
-    compileSdkVersion 35
+    compileSdkVersion 36
     namespace 'com.erc.log'
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 35
-        versionCode 22
-        versionName "1.0.22"
+        targetSdkVersion 36
+        versionCode 23
+        versionName "1.0.23"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
